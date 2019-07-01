@@ -1,6 +1,7 @@
 package ru.alexoheah.devintensive.extensions
 
 import ru.alexoheah.devintensive.utils.Utils
+import java.lang.Math.abs
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -8,6 +9,7 @@ const val SECOND = 1000L
 const val MINUTE = 60 * SECOND
 const val HOUR = 60 * MINUTE
 const val DAY = 24 * HOUR
+const val YEAR = 365 * DAY
 
 fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"):String {
     val dateFormat = SimpleDateFormat(pattern, Locale("ru"))
@@ -15,17 +17,25 @@ fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"):String {
 }
 
 fun Date.humanizeDiff(date: Date): String{
-    val diff: String = "только что"
-    val diffTime = date.time - this.time
-    println("${date.format()} - ${this.format()} -> ${date.time - this.time} = $diffTime")
-    //TODO Сделать склонение слов
+    val diff = "только что"
+    val eventAfter : String
+    val eventBefore : String
+    val diffTime = abs(date.time - this.time)
+    if(date.time - this.time < 0){
+        eventAfter = "через "
+        eventBefore = ""
+    }else{
+        eventAfter = ""
+        eventBefore = " назад"
+    }
+
     return when (diffTime) {
         in 0..5 -> "только что"
-        in 5..MINUTE -> "${Utils.parseTime(diffTime, TimeUnits.SECONDS)} назад"
-        in MINUTE..HOUR -> "${Utils.parseTime(diffTime / MINUTE, TimeUnits.MINUTE)} минут назад"
-        in HOUR..DAY -> "${Utils.parseTime(diffTime / HOUR, TimeUnits.HOUR)} часов назад"
-        in DAY..365*DAY -> "${Utils.parseTime(diffTime / DAY, TimeUnits.DAY)} дней назад"
-        else -> date.format()
+        in 5..MINUTE -> "$eventAfter${Utils.parseTime(diffTime, TimeUnits.SECONDS)}$eventBefore"
+        in MINUTE..HOUR -> "$eventAfter${Utils.parseTime(diffTime / MINUTE, TimeUnits.MINUTE)}$eventBefore"
+        in HOUR..DAY -> "$eventAfter${Utils.parseTime(diffTime / HOUR, TimeUnits.HOUR)}$eventBefore"
+        in DAY..365*DAY -> "$eventAfter${Utils.parseTime(diffTime / DAY, TimeUnits.DAY)}$eventBefore"
+        else -> "более ${if (eventAfter !="") "чем через год" else "года$eventBefore"}"
     }
 }
 
@@ -36,6 +46,7 @@ fun Date.add(value:Int, units:TimeUnits = TimeUnits.SECONDS): Date{
         TimeUnits.MINUTE -> value * MINUTE
         TimeUnits.HOUR -> value * HOUR
         TimeUnits.DAY -> value * DAY
+        TimeUnits.YEAR -> value * YEAR
     }
     this.time = time
     return this
@@ -45,5 +56,6 @@ enum class TimeUnits{
     SECONDS,
     MINUTE,
     HOUR,
-    DAY
+    DAY,
+    YEAR
 }

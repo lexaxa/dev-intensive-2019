@@ -38,21 +38,28 @@ object Utils{
      * Utils.transliteration("Amazing Петр","_") //Amazing_Petr
      */
     fun transliteration(payload: String, divider: String = " "): String{
-        val chars : Map<String, String> = mapOf(
-            "а" to "a",     "б" to "b",     "в" to "v",     "г" to "g",
-            "д" to "d",     "е" to "e",     "ё" to "e",     "ж" to "zh",
-            "з" to "z",     "и" to "i",     "й" to "i",     "к" to "k",
-            "л" to "l",     "м" to "m",     "н" to "n",     "о" to "o",
-            "п" to "p",     "р" to "r",     "с" to "s",     "т" to "t",
-            "у" to "u",     "ф" to "f",     "х" to "h",     "ц" to "c",
-            "ч" to "ch",    "ш" to "sh",    "щ" to "sh'",   "ъ" to "",
-            "ы" to "i",     "ь" to "",      "э" to "e",     "ю" to "yu",
-            "я" to "ya"
-            )
-        var new :String = ""
-        val newv = payload.map { c -> chars.getValue(c.toString()) }
+        val chars : Map<Char, String> = mapOf(
+            'а' to "a",     'б' to "b",     'в' to "v",     'г' to "g",
+            'д' to "d",     'е' to "e",     'ё' to "e",     'ж' to "zh",
+            'з' to "z",     'и' to "i",     'й' to "i",     'к' to "k",
+            'л' to "l",     'м' to "m",     'н' to "n",     'о' to "o",
+            'п' to "p",     'р' to "r",     'с' to "s",     'т' to "t",
+            'у' to "u",     'ф' to "f",     'х' to "h",     'ц' to "c",
+            'ч' to "ch",    'ш' to "sh",    'щ' to "sh'",   'ъ' to "",
+            'ы' to "i",     'ь' to "",      'э' to "e",     'ю' to "yu",
+            'я' to "ya"
+        )
+        var trans = ""
+        for(c in payload){
+            when {
+                chars.containsKey(c) -> trans += chars[c]
+                chars.containsKey(c.toLowerCase()) -> trans += chars[c.toLowerCase()]?.toUpperCase()
+                c==' ' -> trans += divider
+                else -> trans += c
+            }
+        }
 
-        return newv.toString()
+        return trans
     }
     fun parseTime(value: Long, unit: TimeUnits): String{
         val mod = (value % 10).toInt()
@@ -86,6 +93,14 @@ object Utils{
                     1 -> "$value день"
                     2,3,4 -> "$value дня"
                     else -> "$value дней"
+                }
+            }
+            TimeUnits.YEAR -> {
+                when(mod){
+                    0, in 5..9 -> "$value лет"
+                    1 -> "$value год"
+                    2,3,4 -> "$value года"
+                    else -> "$value лет"
                 }
             }
         }
