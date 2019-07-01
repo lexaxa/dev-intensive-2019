@@ -1,7 +1,6 @@
-package ru.alexoheah.devintensive.model
+package ru.skillbranch.devintensive.models
 
-import ru.alexoheah.devintensive.extensions.format
-import ru.alexoheah.devintensive.extensions.humanizeDiff
+import ru.skillbranch.devintensive.extensions.humanizeDiff
 import java.util.*
 
 class TextMessage(

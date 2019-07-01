@@ -1,6 +1,6 @@
-package ru.alexoheah.devintensive.utils
+package ru.skillbranch.devintensive.utils
 
-import ru.alexoheah.devintensive.extensions.TimeUnits
+import ru.skillbranch.devintensive.extensions.TimeUnits
 
 object Utils{
     /**
@@ -64,7 +64,7 @@ object Utils{
     fun parseTime(value: Long, unit: TimeUnits): String{
         val mod = (value % 10).toInt()
         return when(unit){
-            TimeUnits.SECONDS -> {
+            TimeUnits.SECOND -> {
                 "$value секунд" + when(mod){
                     1 -> "у"
                     2,3,4 -> "ы"

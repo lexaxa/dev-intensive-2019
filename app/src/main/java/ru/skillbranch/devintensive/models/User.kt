@@ -1,6 +1,6 @@
-package ru.alexoheah.devintensive.model
+package ru.skillbranch.devintensive.models
 
-import ru.alexoheah.devintensive.utils.Utils
+import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
 data class User(
