@@ -31,7 +31,7 @@ fun Date.humanizeDiff(date: Date = Date()): String{
 
     return when (diffTime) {
         in 0..5 -> "только что"
-        in 5..MINUTE -> "$eventAfter${Utils.parseTime(diffTime, TimeUnits.SECONDS)}$eventBefore"
+        in 5..MINUTE -> "$eventAfter${Utils.parseTime(diffTime, TimeUnits.SECOND)}$eventBefore"
         in MINUTE..HOUR -> "$eventAfter${Utils.parseTime(diffTime / MINUTE, TimeUnits.MINUTE)}$eventBefore"
         in HOUR..DAY -> "$eventAfter${Utils.parseTime(diffTime / HOUR, TimeUnits.HOUR)}$eventBefore"
         in DAY..365*DAY -> "$eventAfter${Utils.parseTime(diffTime / DAY, TimeUnits.DAY)}$eventBefore"
@@ -39,10 +39,10 @@ fun Date.humanizeDiff(date: Date = Date()): String{
     }
 }
 
-fun Date.add(value:Int, units:TimeUnits = TimeUnits.SECONDS): Date{
+fun Date.add(value:Int, units:TimeUnits = TimeUnits.SECOND): Date{
     var time = this.time
     time += when(units){
-        TimeUnits.SECONDS -> value * SECOND
+        TimeUnits.SECOND -> value * SECOND
         TimeUnits.MINUTE -> value * MINUTE
         TimeUnits.HOUR -> value * HOUR
         TimeUnits.DAY -> value * DAY
@@ -53,7 +53,7 @@ fun Date.add(value:Int, units:TimeUnits = TimeUnits.SECONDS): Date{
 }
 
 enum class TimeUnits{
-    SECONDS,
+    SECOND,
     MINUTE,
     HOUR,
     DAY,
