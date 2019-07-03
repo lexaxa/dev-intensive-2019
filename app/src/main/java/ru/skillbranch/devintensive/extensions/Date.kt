@@ -71,5 +71,9 @@ enum class TimeUnits{
     MINUTE,
     HOUR,
     DAY,
-    YEAR
+    YEAR;
+
+    fun plural(value: Int): String {
+        return Utils.parseTime(value.toLong(),this)
+    }
 }
