@@ -64,50 +64,48 @@ data class User(
      * .isOnline(b)
      * .build() должен вернуть объект User
      */
-    class Builder {
-        var id: String = ""
-        var firstName: String? = null
-        var lastName: String? = null
-        var avatar: String? = null
-        var rating: Int = 0
-        var respect: Int = 0
-        var lastVisit: Date? = Date()
+    class Builder (
+        var id: String = "",
+        var firstName: String?,
+        var lastName: String?,
+        var avatar: String?,
+        var rating: Int = 0,
+        var respect: Int = 0,
+        var lastVisit: Date? = Date(),
         var isOnline: Boolean = false
-
-        fun id(id :String) : Builder{
+    ){
+        fun id(id :String) = apply {
             this.id = id
-            return this
         }
-        fun firstName( firstName: String?) : Builder{
+        fun firstName( firstName: String?) = apply {
             this.firstName = firstName
             return this
         }
-        fun lastName( value: String?) :Builder{
+        fun lastName( value: String?) = apply {
             lastName = value
             return this
         }
-        fun avatar( value: String?) :Builder{
+        fun avatar( value: String?) = apply {
             avatar = value
             return this
         }
-        fun rating( value: Int) :Builder{
+        fun rating( value: Int) = apply {
             rating = value
             return this
         }
-        fun respect( value: Int) :Builder{
+        fun respect( value: Int) = apply {
             respect = value
             return this
         }
-        fun lastVisit( value: Date) :Builder{
+        fun lastVisit( value: Date) = apply {
             lastVisit = value
             return this
         }
-        fun isOnline( value: Boolean) :Builder{
+        fun isOnline( value: Boolean) = apply {
             isOnline = value
             return this
         }
-        fun build():User{
-            return User(this)
-        }
+        fun build() = User(this)
+
     }
 }
