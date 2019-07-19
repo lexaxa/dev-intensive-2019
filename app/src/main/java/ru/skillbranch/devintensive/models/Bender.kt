@@ -26,7 +26,6 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             }
             Question.MATERIAL -> {
                 if (answer.isNotEmpty() && answer.matches(".*?(\\d).*".toRegex())){
-                    //^[а-яa-zA-ZА-Я]+$
                     return "Материал не должен содержать цифр\n${question.question}" to status.color
                 }
             }
