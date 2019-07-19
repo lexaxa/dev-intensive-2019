@@ -16,39 +16,40 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         when(question){
             Question.NAME -> {
                 if (answer.isNotEmpty() && answer.matches("^[^A-ZА-Я].*?".toRegex())){
-                    return "Имя должно начинаться с заглавной буквы" to status.color
+                    return "Имя должно начинаться с заглавной буквы\n${question.question}" to status.color
                 }
             }
             Question.PROFESSION -> {
                 if (answer.isNotEmpty() && answer.matches("^[^а-яa-z].*?".toRegex())){
-                    return "Профессия должна начинаться со строчной буквы" to status.color
+                    return "Профессия должна начинаться со строчной буквы\n${question.question}" to status.color
                 }
             }
             Question.MATERIAL -> {
-                if (answer.isNotEmpty() && !answer.matches("[а-яa-zA-ZА-Я]+".toRegex())){
-                    return "Материал не должен содержать цифр" to status.color
+                if (answer.isNotEmpty() && answer.matches(".*?(\\d).*".toRegex())){
+                    //^[а-яa-zA-ZА-Я]+$
+                    return "Материал не должен содержать цифр\n${question.question}" to status.color
                 }
             }
             Question.BDAY -> {
                 if (answer.isNotEmpty() && !answer.matches("^\\d+$".toRegex())){
-                    return "Год моего рождения должен содержать только цифры" to status.color
+                    return "Год моего рождения должен содержать только цифры\n${question.question}" to status.color
                 }
             }
             Question.SERIAL -> {
                 if (answer.isNotEmpty() && !answer.matches("^[\\d]{7}$".toRegex())){
-                    return "Серийный номер содержит только цифры, и их 7" to status.color
+                    return "Серийный номер содержит только цифры, и их 7\n${question.question}" to status.color
                 }
             }
             Question.IDLE -> {
-                //игнорировать валидацию
+                return question.question to status.color
             }
         }
-        return if(question.answer.contains(answer)){
+        return if(question.answer.contains(answer.toLowerCase())){
             question = question.nextQuestion()
-            "Отлично - это правильный ответ!\n${question.question}" to status.color
+            "Отлично - ты справился\n${question.question}" to status.color
         }else{
             status = status.nextStatus()
-            "Это не правильный ответ!\n${question.question}" to status.color
+            "Это неправильный ответ\n${question.question}" to status.color
         }
     }
 
@@ -83,7 +84,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         SERIAL("Мой серийный номер?", listOf("2716057")){
             override fun nextQuestion(): Question = IDLE
         },
-        IDLE("Отлично - ты справился\nНа этом все, вопросов больше нет", listOf()){
+        IDLE("На этом все, вопросов больше нет", listOf()){
             override fun nextQuestion(): Question = IDLE
         };
 

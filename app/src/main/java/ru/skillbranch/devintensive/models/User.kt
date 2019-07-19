@@ -66,9 +66,9 @@ data class User(
      */
     class Builder (
         var id: String = "",
-        var firstName: String?,
-        var lastName: String?,
-        var avatar: String?,
+        var firstName: String = "",
+        var lastName: String = "",
+        var avatar: String = "",
         var rating: Int = 0,
         var respect: Int = 0,
         var lastVisit: Date? = Date(),
@@ -77,15 +77,15 @@ data class User(
         fun id(id :String) = apply {
             this.id = id
         }
-        fun firstName( firstName: String?) = apply {
+        fun firstName( firstName: String) = apply {
             this.firstName = firstName
             return this
         }
-        fun lastName( value: String?) = apply {
+        fun lastName( value: String) = apply {
             lastName = value
             return this
         }
-        fun avatar( value: String?) = apply {
+        fun avatar( value: String) = apply {
             avatar = value
             return this
         }
