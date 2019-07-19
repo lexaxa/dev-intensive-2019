@@ -39,8 +39,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         val status = savedInstanceState?.getString("STATUS") ?: Bender.Status.NORMAL.name
         val question = savedInstanceState?.getString("QUESTION") ?: Bender.Question.NAME.name
+        val countFails = savedInstanceState?.getInt("COUNT_FAILS") ?: 0
 
         benderObj = Bender(Bender.Status.valueOf(status), Bender.Question.valueOf(question))
+        benderObj.countFails = countFails
 
         Log.d("M_MainActivity", "onCreate: $status $question")
 
@@ -99,7 +101,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         outState?.putString("STATUS", benderObj.status.name)
         outState?.putString("QUESTION", benderObj.question.name)
-        Log.d("M_MainActivity", "onSaveInstanceState: ${benderObj.status.name} ${benderObj.question.name}")
+        outState?.putInt("COUNT_FAILS", benderObj.countFails)
+        Log.d("M_MainActivity", "onSaveInstanceState: ${benderObj.status.name} ${benderObj.question.name} ${benderObj.countFails}")
     }
     override fun onClick(view: View?) {
         if(view?.id == R.id.iv_send){

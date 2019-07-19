@@ -1,7 +1,7 @@
 package ru.skillbranch.devintensive.models
 
 class Bender(var status: Status = Status.NORMAL, var question: Question = Question.NAME) {
-
+    var countFails = 0
     fun askQuestion(): String = when(question){
         Question.NAME -> Question.NAME.question
         Question.PROFESSION -> Question.PROFESSION.question
@@ -44,11 +44,20 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             }
         }
         return if(question.answer.contains(answer.toLowerCase())){
+            countFails = 0
             question = question.nextQuestion()
             "Отлично - ты справился\n${question.question}" to status.color
         }else{
             status = status.nextStatus()
-            "Это неправильный ответ\n${question.question}" to status.color
+            countFails ++
+            if(countFails<=3) {
+                "Это неправильный ответ\n${question.question}" to status.color
+            }else{
+                countFails = 0
+                status = Status.NORMAL
+                question = Question.NAME
+                "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+            }
         }
     }
 
