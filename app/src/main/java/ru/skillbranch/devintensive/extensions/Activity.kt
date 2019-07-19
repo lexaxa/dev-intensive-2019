@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import kotlin.math.roundToInt
 
 fun Context.convertDpToPx(dp: Float): Float {
     return TypedValue.applyDimension(
@@ -19,10 +20,9 @@ fun Activity.isKeyboardOpen( rootView: View ):Boolean{
     val visibleBounds = Rect()
     rootView.getWindowVisibleDisplayFrame(visibleBounds)
     val heightDiff = rootView.height - visibleBounds.height()
-    val marginOfError = Math.round(convertDpToPx(50F))
+    val marginOfError = convertDpToPx(50F).roundToInt()
 
-    val isOpen = heightDiff > marginOfError
-    return isOpen
+    return heightDiff > marginOfError
 }
 
 fun Activity.isKeyboardClosed( rootView: View) : Boolean = !isKeyboardOpen(rootView)

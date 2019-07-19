@@ -12,16 +12,37 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     }
 
     fun listenAnswer(answer:String) : Pair<String, Triple<Int, Int, Int>>{
-        //TODO
-        /*
-        Валидация
-        Question.NAME -> "Имя должно начинаться с заглавной буквы"
-        Question.PROFESSION -> "Профессия должна начинаться со строчной буквы"
-        Question.MATERIAL -> "Материал не должен содержать цифр"
-        Question.BDAY -> "Год моего рождения должен содержать только цифры"
-        Question.SERIAL -> "Серийный номер содержит только цифры, и их 7"
-        Question.IDLE -> //игнорировать валидацию
-         */
+        println(answer +"="+question)
+        when(question){
+            Question.NAME -> {
+                if (answer.isNotEmpty() && answer.matches("^[^A-ZА-Я].*?".toRegex())){
+                    return "Имя должно начинаться с заглавной буквы" to status.color
+                }
+            }
+            Question.PROFESSION -> {
+                if (answer.isNotEmpty() && answer.matches("^[^а-яa-z].*?".toRegex())){
+                    return "Профессия должна начинаться со строчной буквы" to status.color
+                }
+            }
+            Question.MATERIAL -> {
+                if (answer.isNotEmpty() && !answer.matches("[а-яa-zA-ZА-Я]+".toRegex())){
+                    return "Материал не должен содержать цифр" to status.color
+                }
+            }
+            Question.BDAY -> {
+                if (answer.isNotEmpty() && !answer.matches("^\\d+$".toRegex())){
+                    return "Год моего рождения должен содержать только цифры" to status.color
+                }
+            }
+            Question.SERIAL -> {
+                if (answer.isNotEmpty() && !answer.matches("^[\\d]{7}$".toRegex())){
+                    return "Серийный номер содержит только цифры, и их 7" to status.color
+                }
+            }
+            Question.IDLE -> {
+                //игнорировать валидацию
+            }
+        }
         return if(question.answer.contains(answer)){
             question = question.nextQuestion()
             "Отлично - это правильный ответ!\n${question.question}" to status.color
