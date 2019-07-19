@@ -15,17 +15,19 @@ fun Context.convertDpToPx(dp: Float): Float {
             this.resources.displayMetrics
     )
 }
-
-fun Activity.isKeyboardOpen( rootView: View ):Boolean{
+fun Activity.getRootView(): View {
+    return findViewById<View>(android.R.id.content)
+}
+fun Activity.isKeyboardOpen():Boolean{
     val visibleBounds = Rect()
-    rootView.getWindowVisibleDisplayFrame(visibleBounds)
-    val heightDiff = rootView.height - visibleBounds.height()
+    this.getRootView().getWindowVisibleDisplayFrame(visibleBounds)
+    val heightDiff = getRootView().height - visibleBounds.height()
     val marginOfError = convertDpToPx(50F).roundToInt()
 
     return heightDiff > marginOfError
 }
 
-fun Activity.isKeyboardClosed( rootView: View) : Boolean = !isKeyboardOpen(rootView)
+fun Activity.isKeyboardClosed() : Boolean = !isKeyboardOpen()
 
 fun Activity.hideKeyboard(){
     if(currentFocus != null){
