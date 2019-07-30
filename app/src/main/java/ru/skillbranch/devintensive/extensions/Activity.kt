@@ -6,15 +6,9 @@ import android.graphics.Rect
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import ru.skillbranch.devintensive.utils.Utils
 import kotlin.math.roundToInt
 
-fun Context.convertDpToPx(dp: Float): Float {
-    return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            this.resources.displayMetrics
-    )
-}
 fun Activity.getRootView(): View {
     return findViewById<View>(android.R.id.content)
 }
@@ -22,7 +16,7 @@ fun Activity.isKeyboardOpen():Boolean{
     val visibleBounds = Rect()
     this.getRootView().getWindowVisibleDisplayFrame(visibleBounds)
     val heightDiff = getRootView().height - visibleBounds.height()
-    val marginOfError = convertDpToPx(50F).roundToInt()
+    val marginOfError = Utils.convertDpToPx(this,50F).roundToInt()
 
     return heightDiff > marginOfError
 }
