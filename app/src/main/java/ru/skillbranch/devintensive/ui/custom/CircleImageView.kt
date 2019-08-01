@@ -1,12 +1,14 @@
 package ru.skillbranch.devintensive.ui.custom
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.*
 import android.graphics.Bitmap.Config
 import android.graphics.PorterDuff.Mode
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import android.util.Log
+import android.util.TypedValue
 import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
@@ -27,6 +29,7 @@ class CircleImageView @JvmOverloads constructor(
     private var bitmap: Bitmap? = null
     private var borderColor = DEFAULT_BORDER_COLOR
     private var borderWidth = Utils.convertDpToPx(context, 2f ).toInt()
+    private var initials: String? = null
 
     init {
         attrs?.let{
@@ -141,4 +144,52 @@ class CircleImageView @JvmOverloads constructor(
 
         return outputBmp
     }
+
+    fun generateAvatar(text: String?, sizeSp: Int, theme: Resources.Theme){
+        /* don't render if initials haven't changed */
+        if (text != this.initials){
+            val image =
+                    if (text == null) {
+                        generateDefAvatar(theme)
+                    }
+                    else generateLetterAvatar(text, sizeSp, theme)
+
+            this.initials = text
+            setImageBitmap(image)
+        }
+    }
+
+    private fun generateLetterAvatar(text: String, sizeSp: Int, theme: Resources.Theme): Bitmap {
+        val image = generateDefAvatar(theme)
+
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.textSize = sizeSp.toFloat()
+        paint.color = Color.WHITE
+        paint.textAlign = Paint.Align.CENTER
+
+        val textBounds = Rect()
+        paint.getTextBounds(text, 0, text.length, textBounds)
+
+        val backgroundBounds = RectF()
+        backgroundBounds.set(0f, 0f, layoutParams.height.toFloat(), layoutParams.height.toFloat())
+
+        val textBottom = backgroundBounds.centerY() - textBounds.exactCenterY()
+        val canvas = Canvas(image)
+        canvas.drawText(text, backgroundBounds.centerX(), textBottom, paint)
+
+        return image
+    }
+
+    private fun generateDefAvatar(theme: Resources.Theme): Bitmap {
+        val image = Bitmap.createBitmap(layoutParams.height, layoutParams.height, Config.ARGB_8888)
+        val color = TypedValue()
+        theme.resolveAttribute(R.attr.colorAccent, color, true)
+
+
+        val canvas = Canvas(image)
+        canvas.drawColor(color.data)
+
+        return image
+    }
+
 }

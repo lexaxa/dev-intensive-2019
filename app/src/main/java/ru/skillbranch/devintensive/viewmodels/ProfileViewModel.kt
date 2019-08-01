@@ -8,13 +8,16 @@ import androidx.lifecycle.ViewModel
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.repositories.PreferencesRepository
 
-class ProfileViewModel : ViewModel(){
+class ProfileViewModel : ViewModel() {
 
-    private val repository : PreferencesRepository = PreferencesRepository
+    private val repository: PreferencesRepository = PreferencesRepository
     private val profileData = MutableLiveData<Profile>()
     private val appTheme = MutableLiveData<Int>()
+    private val repoName = MutableLiveData<String>()
+    private val repositoryError = MutableLiveData<Boolean>()
+    private val isRepoError = MutableLiveData<Boolean>()
 
-    init{
+    init {
         Log.d("M_ProfileViewModel", "init view model")
         profileData.value = repository.getProfile()
         appTheme.value = repository.getAppTheme()
@@ -29,6 +32,8 @@ class ProfileViewModel : ViewModel(){
 
     fun getTheme(): LiveData<Int> = appTheme
 
+    fun getIsRepoError(): LiveData<Boolean> = isRepoError
+    fun getRepositoryError(): LiveData<Boolean> = repositoryError
     fun saveProfileData(profile: Profile){
         repository.saveProfile(profile)
         profileData.value = profile
@@ -43,4 +48,16 @@ class ProfileViewModel : ViewModel(){
         repository.saveAppTheme(appTheme.value!!)
     }
 
+    private fun isValidRepo(repo:String):Boolean {
+
+        val check = repo.isNotEmpty() && repo.matches(
+                "^(?:https://)?(?:www.)?(?:github.com/)[^/|\\\\s]+(?<!\benterprise|\bfeatures|\btopics|\bcollections|\btrending|\bevents|\bmarketplace|\bpricing|\bnonprofit|\bcustomer-stories|\bsecurity|\blogin|\bjoin)(?:/)?\$".toRegex())
+        return check
+    }
+    fun onRepoChanged(repo: String) {
+        repositoryError.value = isValidRepo(repo)
+    }
+    fun onRepoEditCompleted(isError: Boolean){
+        isRepoError.value = isError
+    }
 }

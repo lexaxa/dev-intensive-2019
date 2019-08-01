@@ -114,4 +114,7 @@ object Utils{
                 context.resources.displayMetrics
         )
     }
+    fun convertSpToPx(context: Context, sp: Int) :Int{
+        return sp * context.resources.displayMetrics.scaledDensity.toInt()
+    }
 }

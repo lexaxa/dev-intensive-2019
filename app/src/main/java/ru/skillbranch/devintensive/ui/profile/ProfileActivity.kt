@@ -4,7 +4,10 @@ import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -14,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
@@ -43,6 +47,8 @@ class ProfileActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         viewModel.getProfileData().observe(this, Observer{ updateUI(it) })
         viewModel.getTheme().observe(this, Observer{ updateTheme(it) })
+        viewModel.getRepositoryError().observe(this, Observer{ updateRepoError(it)})
+        viewModel.getIsRepoError().observe(this, Observer{ updateRepository(it)})
     }
 
     private fun updateTheme(mode: Int){
@@ -55,6 +61,14 @@ class ProfileActivity : AppCompatActivity() {
                 v.text = it[k].toString()
             }
         }
+    }
+    private fun updateRepoError(isError: Boolean){
+        wr_repository.isErrorEnabled = isError
+        wr_repository.error = if(isError) "Невалидный адрес репозитория" else null
+    }
+    private fun updateRepository(isError: Boolean){
+        Log.d("TAG", "updateRepository " + et_repository.text.toString())
+        if(isError) et_repository.text.clear()
     }
     private fun initViews(savedInstanceState: Bundle?){
         viewFields = mapOf(
@@ -79,6 +93,18 @@ class ProfileActivity : AppCompatActivity() {
         btn_switch_theme.setOnClickListener {
             viewModel.switchTheme()
         }
+
+        et_repository.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(p0: Editable?) {
+                viewModel.onRepoChanged(p0.toString())
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
     }
 
     private fun showCurrentMode(isEdit: Boolean) {
@@ -115,6 +141,11 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun getThemeAccentColor(): Int {
+        val value = TypedValue()
+        theme.resolveAttribute(R.attr.colorAccent, value, true)
+        return value.data
+    }
     private fun saveProfileInfo(){
         Profile(
                 firstName = et_first_name.text.toString(),
@@ -125,4 +156,10 @@ class ProfileActivity : AppCompatActivity() {
             viewModel.saveProfileData(this)
         }
     }
+
+    private fun updateAvatar(profile: Profile){
+        val initials = Utils.toInitials(profile.firstName, profile.lastName)
+        iv_avatar.generateAvatar(initials, Utils.convertSpToPx(this, 48), theme)
+    }
+
 }
