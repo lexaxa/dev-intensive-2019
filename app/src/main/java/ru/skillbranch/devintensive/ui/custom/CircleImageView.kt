@@ -26,16 +26,16 @@ class CircleImageView @JvmOverloads constructor(
         private const val DEFAULT_BORDER_COLOR = Color.WHITE
     }
 
-    private var bitmap: Bitmap? = null
     private var borderColor = DEFAULT_BORDER_COLOR
-    private var borderWidth = Utils.convertDpToPx(context, 2f ).toInt()
+    private var borderWidth = 2//Utils.convertDpToPx(context, 2f ).toInt()
     private var initials: String? = null
 
     init {
         attrs?.let{
             val typedArray = context.obtainStyledAttributes(it, R.styleable.CircleImageView)
             borderColor = typedArray.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
-            borderWidth = typedArray.getDimensionPixelSize(R.styleable.CircleImageView_cv_borderWidth, borderWidth)
+            borderWidth = typedArray.getInt(R.styleable.CircleImageView_cv_borderWidth, borderWidth)
+//            borderWidth = typedArray.getDimensionPixelSize(R.styleable.CircleImageView_cv_borderWidth, borderWidth)
             Log.d("Tag", "Color & Width $borderColor = $borderWidth")
             typedArray.recycle()
         }
@@ -53,30 +53,29 @@ class CircleImageView @JvmOverloads constructor(
         this.invalidate()
     }
 
-    fun getBorderWidth():Int = Utils.convertDpToPx(context, borderWidth.toFloat()).toInt()
+    @Dimension
+    fun getBorderWidth():Int = borderWidth//Utils.convertDpToPx(context, borderWidth.toFloat()).toInt()
 
     fun setBorderWidth(@Dimension dp: Int){
-        borderWidth = Utils.convertDpToPx(context, dp.toFloat()).toInt()
+        borderWidth = dp//Utils.convertDpToPx(context, dp.toFloat()).toInt()
         this.invalidate()
     }
 
-    override fun onDraw(canvas: Canvas?) {
-        bitmap = getBitmapFromDrawable() ?: return
+    override fun onDraw(canvas: Canvas) {
+        var bitmap = getBitmapFromDrawable() ?: return
         if (width == 0 || height == 0) return
 
-        bitmap = getScaledBitmap(bitmap!!, width)
-        bitmap = getCenterCroppedBitmap(bitmap!!, width)
-        bitmap = getCircleBitmap(bitmap!!)
+        bitmap = getScaledBitmap(bitmap, width)
+        bitmap = getCenterCroppedBitmap(bitmap, width)
+        bitmap = getCircleBitmap(bitmap)
 
         if (borderWidth > 0)
-            bitmap = getStrokedBitmap(bitmap!!, borderWidth, borderColor)
+            bitmap = getStrokedBitmap(bitmap, borderWidth, borderColor)
 
-        canvas?.drawBitmap(bitmap, 0F, 0F, null)
+        canvas.drawBitmap(bitmap, 0F, 0F, null)
     }
 
     private fun getBitmapFromDrawable(): Bitmap? {
-        if (bitmap != null)
-            return bitmap
 
         if (drawable == null)
             return null
@@ -184,7 +183,6 @@ class CircleImageView @JvmOverloads constructor(
         val image = Bitmap.createBitmap(layoutParams.height, layoutParams.height, Config.ARGB_8888)
         val color = TypedValue()
         theme.resolveAttribute(R.attr.colorAccent, color, true)
-
 
         val canvas = Canvas(image)
         canvas.drawColor(color.data)

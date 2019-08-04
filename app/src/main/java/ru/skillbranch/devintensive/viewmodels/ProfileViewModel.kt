@@ -49,10 +49,11 @@ class ProfileViewModel : ViewModel() {
     }
 
     private fun isValidRepo(repo:String):Boolean {
-
-        val check = repo.isNotEmpty() && repo.matches(
-                "^(?:https://)?(?:www.)?(?:github.com/)[^/|\\\\s]+(?<!\benterprise|\bfeatures|\btopics|\bcollections|\btrending|\bevents|\bmarketplace|\bpricing|\bnonprofit|\bcustomer-stories|\bsecurity|\blogin|\bjoin)(?:/)?\$".toRegex())
-        return check
+        val exclude = "enterprise|features|topics|collections" +
+                "|trending|events|marketplace|pricing|nonprofit" +
+                "|customer-stories|security|login|join"
+        val regex = "^(https:\\/\\/)?(www\\.)?(github\\.com\\/)(?!($exclude)(?=\\/|\$))[a-zA-Z\\d](?:[a-zA-Z\\d]|-(?=[a-zA-Z\\d])){0,38}(\\/)?$"
+        return repo.isNotEmpty() && !repo.matches(regex.toRegex())
     }
     fun onRepoChanged(repo: String) {
         repositoryError.value = isValidRepo(repo)

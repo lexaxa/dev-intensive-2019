@@ -35,7 +35,6 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
         initViewModel()
-        Log.d("M_ProfileActivity", "onCreate")
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -52,7 +51,6 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateTheme(mode: Int){
-        Log.d("M_ProfileActivity", "updateTheme")
         delegate.setLocalNightMode(mode)
     }
     private fun updateUI(profile: Profile){
@@ -61,6 +59,7 @@ class ProfileActivity : AppCompatActivity() {
                 v.text = it[k].toString()
             }
         }
+        updateAvatar(profile)
     }
     private fun updateRepoError(isError: Boolean){
         wr_repository.isErrorEnabled = isError
@@ -85,6 +84,8 @@ class ProfileActivity : AppCompatActivity() {
         showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
+            viewModel.onRepoEditCompleted(wr_repository.isErrorEnabled)
+
             if(isEditMode) saveProfileInfo()
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
@@ -98,10 +99,8 @@ class ProfileActivity : AppCompatActivity() {
             override fun afterTextChanged(p0: Editable?) {
                 viewModel.onRepoChanged(p0.toString())
             }
-
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         })
