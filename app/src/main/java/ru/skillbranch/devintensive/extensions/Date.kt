@@ -15,7 +15,9 @@ fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"):String {
     val dateFormat = SimpleDateFormat(pattern, Locale("ru"))
     return dateFormat.format(this)
 }
-
+fun Date.shortFormat():String {
+    return ""
+}
 /*
 0с - 1с "только что"
 1с - 45с "несколько секунд назад"
