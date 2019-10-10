@@ -10,11 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.children
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.activity_group.*
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.UserItem
@@ -87,7 +87,7 @@ class GroupActivity : AppCompatActivity(){
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(GroupViewModel::class.java)
-        viewModel.getUsersData().observe(this, Observer{ usersAdapter.updateData(it)})
+        viewModel.getUserData().observe(this, Observer{ usersAdapter.updateData(it)})
         viewModel.getSelectedData().observe(this, Observer {
             updateChips(it)
             toggleFab(it.size > 1)
@@ -119,7 +119,7 @@ class GroupActivity : AppCompatActivity(){
         chip_group.visibility = if(listUsers.isEmpty()) View.GONE else View.VISIBLE
 
         val users = listUsers
-            .associate { user -> user.id to user }
+            .associateBy { user -> user.id to user }
             .toMutableMap()
 
         val views = chip_group.children.associate { view -> view.tag to view }

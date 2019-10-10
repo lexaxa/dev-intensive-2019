@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_chat_group.*
 import kotlinx.android.synthetic.main.item_chat_single.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
@@ -68,7 +70,7 @@ class ChatAdapter(val listener : (ChatItem)-> Unit) : RecyclerView.Adapter<ChatA
         diffResult.dispatchUpdatesTo(this)
     }
 
-    abstract inner class ChatItemViewHolder(convertView: View) : RecyclerView.ViewHolder(counvertView), LayoutContainer{
+    abstract inner class ChatItemViewHolder(convertView: View) : RecyclerView.ViewHolder(convertView), LayoutContainer{
         override val containerView: View?
             get() = itemView
 

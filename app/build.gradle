@@ -48,7 +48,7 @@ dependencies {
 tasks.withType(Test) {
     testLogging {
         exceptionFormat "full"
-        events "failed", "passes"
+        events "failed", "passed"
         info.events = ["failed"]
         showExceptions true
         showCauses true
