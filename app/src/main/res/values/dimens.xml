@@ -4,6 +4,7 @@
     <dimen name="font_large_20">18sp</dimen>
     <dimen name="font_normal_16">16sp</dimen>
     <dimen name="font_small_12">12sp</dimen>
+    <dimen name="font_smallest_10">10sp</dimen>
 
     <!-- typical spacing between two views -->
     <dimen name="spacing_maximum_72">72dp</dimen>
@@ -14,6 +15,7 @@
     <dimen name="spacing_tiny_4">4dp</dimen>
 
     <!--size elements-->
+    <dimen name="send_button_size">24dp</dimen>
     <dimen name="btn_round_size_40">40dp</dimen>
     <dimen name="avatar_round_size">112dp</dimen>
     <dimen name="item_size">72dp</dimen>
@@ -21,4 +23,5 @@
     <dimen name="space_maximum_72">72dp</dimen>
     <dimen name="counter_size">20dp</dimen>
     <dimen name="icon_size">24dp</dimen>
+
 </resources>

@@ -12,6 +12,7 @@ import ru.skillbranch.devintensive.models.data.ChatItem
 
 class ChatItemTouchHelperCallback (
     val adapter: ChatAdapter,
+    val isArchive: Boolean,
     val swipeListener: (ChatItem) -> Unit
 ): ItemTouchHelper.Callback(){
 

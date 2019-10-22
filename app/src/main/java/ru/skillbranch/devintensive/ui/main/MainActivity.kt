@@ -2,7 +2,10 @@ package ru.skillbranch.devintensive.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -41,8 +44,12 @@ class MainActivity: AppCompatActivity(){
             Snackbar.make(rv_chat_list, "Click on ${it.title}", Snackbar.LENGTH_LONG)
         }
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        val touchCallback = ChatItemTouchHelperCallback(chatAdapter){
+        val touchCallback = ChatItemTouchHelperCallback(chatAdapter, false){
             viewModel.addToArchive(it.id)
+            val lm = rv_chat_list.layoutManager as LinearLayoutManager
+            if(lm.findFirstCompletelyVisibleItemPosition() == 0){
+                rv_chat_list.scrollToPosition(0)
+            }
             Snackbar.make(rv_chat_list, "Are you sure that add ${it.title} to archive?", Snackbar.LENGTH_LONG)
                 .setDuration(2000)
                 .setAction("Cancel") { _ ->
@@ -70,5 +77,25 @@ class MainActivity: AppCompatActivity(){
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         viewModel.getChatData().observe(this, Observer { chatAdapter.updateData(it) })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_search, menu)
+        val searchItem = menu?.findItem(R.id.action_search)
+        val searchView = searchItem?.actionView as SearchView
+        searchView.queryHint = "Введите имя пользователя"
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.handleSearchQuery(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.handleSearchQuery(newText)
+                return true
+            }
+        })
+
+        return super.onCreateOptionsMenu(menu)
     }
 }
