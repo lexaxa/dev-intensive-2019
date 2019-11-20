@@ -71,6 +71,7 @@ class GroupActivity : AppCompatActivity(){
     private fun initViews() {
         usersAdapter = UserAdapter { viewModel.handleSelectedItem(it.id) }
         val divider = DividerItemDecoration( this, DividerItemDecoration.VERTICAL)
+        divider.setDrawable(resources.getDrawable(R.drawable.divider_chat_list, theme))
         with(rv_user_list){
             adapter = usersAdapter
             layoutManager = LinearLayoutManager(this@GroupActivity)
@@ -122,10 +123,10 @@ class GroupActivity : AppCompatActivity(){
             .associateBy { user -> user.id to user }
             .toMutableMap()
 
-        val views = chip_group.children.associate { view -> view.tag to view }
+        val views = chip_group.children.associateBy { view -> view.tag }
 
         for((k,v) in views){
-            if(users.containsKey(k)) chip_group.removeView(v)
+            if(!users.containsKey(k)) chip_group.removeView(v)
             else users.remove(k)
         }
 
