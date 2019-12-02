@@ -10,7 +10,7 @@ data class Profile(
     val rating: Int = 0,
     val respect: Int = 0
 ){
-
+    val fullName: String = "$firstName $lastName"
     val nickName: String = Utils.transliteration("$firstName $lastName", "_")
     val initials: String = Utils.toInitials(firstName, lastName) ?: ""
     val rank: String = "Junior Android Developer"

@@ -57,7 +57,7 @@ class ChatAdapter(val listener : (ChatItem)-> Unit) : RecyclerView.Adapter<ChatA
         val diffCallback = object : DiffUtil.Callback(){
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = items[oldItemPosition].id == data[newItemPosition].id
 
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = items[oldItemPosition].hashCode() == data[newItemPosition].hashCode()
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = items[oldItemPosition] == data[newItemPosition]
 
             override fun getOldListSize(): Int = items.size
 
